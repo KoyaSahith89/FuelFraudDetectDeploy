@@ -1,0 +1,703 @@
+/* 3D Animations and Transformations for Fuel Fraud Detection App */
+
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --animation-duration: 0.6s;
+    --hover-scale: 1.05;
+    --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --card-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* Global 3D Scene Setup */
+body {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Floating Animation Keyframes */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotateX(0deg); }
+    50% { transform: translateY(-10px) rotateX(2deg); }
+}
+
+@keyframes pulse3d {
+    0%, 100% { transform: scale(1) rotateY(0deg); }
+    50% { transform: scale(1.05) rotateY(5deg); }
+}
+
+@keyframes slideInLeft3D {
+    0% { 
+        transform: translateX(-100px) rotateY(-30deg) translateZ(-50px);
+        opacity: 0;
+    }
+    100% { 
+        transform: translateX(0) rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight3D {
+    0% { 
+        transform: translateX(100px) rotateY(30deg) translateZ(-50px);
+        opacity: 0;
+    }
+    100% { 
+        transform: translateX(0) rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp3D {
+    0% { 
+        transform: translateY(50px) rotateX(30deg) translateZ(-30px);
+        opacity: 0;
+    }
+    100% { 
+        transform: translateY(0) rotateX(0deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fraudAlert {
+    0%, 100% { 
+        transform: scale(1) rotateZ(0deg);
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    25% { 
+        transform: scale(1.02) rotateZ(1deg);
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0.3);
+    }
+    50% { 
+        transform: scale(1.05) rotateZ(-1deg);
+        box-shadow: 0 0 0 20px rgba(220, 53, 69, 0.1);
+    }
+    75% { 
+        transform: scale(1.02) rotateZ(1deg);
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0.3);
+    }
+}
+
+@keyframes successGlow {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+    50% { 
+        transform: scale(1.02);
+        box-shadow: 0 0 0 15px rgba(25, 135, 84, 0.2);
+    }
+}
+
+@keyframes rotate3D {
+    0% { transform: rotateY(0deg) rotateX(0deg); }
+    25% { transform: rotateY(90deg) rotateX(5deg); }
+    50% { transform: rotateY(180deg) rotateX(0deg); }
+    75% { transform: rotateY(270deg) rotateX(-5deg); }
+    100% { transform: rotateY(360deg) rotateX(0deg); }
+}
+
+@keyframes cardFlip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg) scale(1.1); }
+    100% { transform: rotateY(0deg); }
+}
+
+/* Enhanced Navbar with 3D Effects */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(13, 110, 253, 0.9) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideInUp3D 0.8s ease-out;
+}
+
+.navbar-brand {
+    animation: pulse3d 2s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.1) rotateY(10deg);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.nav-link {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px) rotateX(5deg);
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Enhanced Card System with 3D Transformations */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--card-shadow);
+    transform-style: preserve-3d;
+    transition: all var(--animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInUp3D 0.8s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover {
+    transform: translateY(-10px) rotateX(5deg) rotateY(2deg) translateZ(20px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--info-color)) !important;
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Enhanced Form Elements with 3D Effects */
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-color);
+    transform: translateZ(5px) scale(1.02);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.form-label {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus + .form-label,
+.form-control:focus ~ .form-label {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Button System with 3D Animations */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    font-weight: 600;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px) rotateX(10deg) translateZ(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(-1px) rotateX(5deg) translateZ(5px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, var(--primary-color));
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+}
+
+/* Enhanced Alert System with Dynamic Animations */
+.alert {
+    border: none;
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    animation: slideInRight3D 0.8s ease-out;
+}
+
+.alert-success {
+    background: rgba(25, 135, 84, 0.2);
+    border-left: 4px solid var(--success-color);
+    animation: successGlow 2s ease-in-out infinite;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.2);
+    border-left: 4px solid var(--danger-color);
+    animation: fraudAlert 1.5s ease-in-out infinite;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.2);
+    border-left: 4px solid var(--warning-color);
+}
+
+.alert-info {
+    background: rgba(13, 202, 240, 0.2);
+    border-left: 4px solid var(--info-color);
+}
+
+/* Enhanced Icons with 3D Rotations */
+.fas, .fab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.fas:hover, .fab:hover {
+    transform: rotateY(360deg) scale(1.2);
+    text-shadow: 0 0 15px currentColor;
+}
+
+/* Gas Pump Icon Special Animation */
+.fa-gas-pump {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Statistics Cards with Hover Effects */
+.card-body:hover .fas {
+    animation: rotate3D 1s ease-in-out;
+}
+
+/* Enhanced Table with 3D Row Effects */
+.table-hover tbody tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px) rotateY(1deg) translateZ(5px);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Badge Enhancements */
+.badge {
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.badge:hover {
+    transform: rotateX(15deg) translateZ(5px);
+}
+
+/* Container Animations */
+.container {
+    animation: slideInUp3D 1s ease-out;
+}
+
+/* Loading Animation for Form Submission */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced Dashboard Statistics */
+.dashboard-stat {
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-stat:hover {
+    transform: rotateY(10deg) translateZ(20px);
+}
+
+/* Progressive Loading Animation */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-3d {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate3D 2s linear infinite;
+}
+
+.loader-3d::before,
+.loader-3d::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+}
+
+.loader-3d::after {
+    transform: rotateX(90deg);
+    border-color: var(--info-color);
+    border-top-color: transparent;
+}
+
+/* Responsive 3D Adjustments */
+@media (max-width: 768px) {
+    .card:hover {
+        transform: translateY(-5px) rotateX(2deg) translateZ(10px);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px) rotateX(5deg) translateZ(5px);
+    }
+    
+    body {
+        perspective: 800px;
+    }
+}
+
+/* Accessibility - Reduce Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Custom Scrollbar with 3D Effect */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--primary-color), var(--info-color));
+    border-radius: 6px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--info-color), var(--primary-color));
+}
+
+/* Enhanced Button Particle Effects */
+.btn-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.btn-primary:hover .btn-particles::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: particle-burst 1s ease-out infinite;
+}
+
+@keyframes particle-burst {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(calc(-50% + var(--dx, 0)), calc(-50% + var(--dy, 0))) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Holographic Glass Effect */
+.holographic-glass {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05)
+    );
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.holographic-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: holographic-sweep 3s infinite;
+}
+
+@keyframes holographic-sweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Advanced Statistics Animation */
+.stat-card {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.stat-card:hover {
+    transform: rotateY(10deg) translateZ(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(13, 110, 253, 0.1),
+        rgba(13, 202, 240, 0.1)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+}
+
+.stat-card:hover::after {
+    opacity: 1;
+}
+
+/* Floating Icon Animation */
+@keyframes floating-icon {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-5px) rotate(-2deg);
+    }
+}
+
+.floating-icon {
+    animation: floating-icon 4s ease-in-out infinite;
+}
+
+/* 3D Table Enhancement */
+.table-3d {
+    transform-style: preserve-3d;
+}
+
+.table-3d tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.table-3d tr:hover {
+    transform: translateZ(5px) rotateX(2deg);
+    background: rgba(13, 110, 253, 0.1) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animated Background Grid */
+.grid-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(13, 110, 253, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 110, 253, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: -2;
+    animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Enhanced Form Focus Ring */
+.form-control:focus {
+    box-shadow: 
+        0 0 0 0.2rem rgba(13, 110, 253, 0.25),
+        0 0 20px rgba(13, 110, 253, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Pulsing Success/Error States */
+.alert-success {
+    position: relative;
+}
+
+.alert-success::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, var(--success-color), transparent, var(--success-color));
+    z-index: -1;
+    animation: success-pulse 2s ease-in-out infinite;
+}
+
+@keyframes success-pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.02); }
+}
+
+.alert-danger::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, var(--danger-color), transparent, var(--danger-color));
+    z-index: -1;
+    animation: danger-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.03); }
+}

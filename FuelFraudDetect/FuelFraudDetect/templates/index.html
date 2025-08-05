@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Fraud Detection System</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Disable all transformations and animations */
+        * {
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+            transform-style: flat !important;
+        }
+        body {
+            perspective: none !important;
+            background: #212529 !important;
+        }
+        .card, .btn, .badge, .form-control, .alert {
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+        .btn-particles {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-gas-pump me-2"></i>
+                Fuel Fraud Detection
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" href="/">Detection Form</a>
+                <a class="nav-link" href="/dashboard">Dashboard</a>
+                <a class="nav-link" href="/model-info">Model Info</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2 class="mb-0">
+                            <i class="fas fa-gas-pump me-2 floating-icon"></i>
+                            Fuel Fraud Detection System
+                        </h2>
+                        <p class="mb-0 mt-2 opacity-75">AI-Powered Anomaly Detection</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">
+                            Enter transaction details below to check for potential fraud using our AI-powered detection system.
+                        </p>
+                        
+                        <form method="POST" action="/predict" novalidate>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fuel_qty" class="form-label">
+                                        <i class="fas fa-tint me-1"></i>
+                                        Fuel Quantity (Liters)
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="fuel_qty"
+                                           name="fuel_qty" 
+                                           step="0.01"
+                                           min="0.01"
+                                           placeholder="e.g., 25.5"
+                                           value="{{ form_data.fuel_qty if form_data else '' }}"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="rate" class="form-label">
+                                        <i class="fas fa-dollar-sign me-1"></i>
+                                        Rate (per Liter)
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="rate"
+                                           name="rate" 
+                                           step="0.01"
+                                           min="0.01"
+                                           placeholder="e.g., 1.45"
+                                           value="{{ form_data.rate if form_data else '' }}"
+                                           required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">
+                                    <i class="fas fa-money-bill-wave me-1"></i>
+                                    Total Amount
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="amount"
+                                       name="amount" 
+                                       step="0.01"
+                                       min="0.01"
+                                       placeholder="e.g., 36.98"
+                                       value="{{ form_data.amount if form_data else '' }}"
+                                       required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="pump_id" class="form-label">
+                                        <i class="fas fa-gas-pump me-1"></i>
+                                        Pump ID
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="pump_id"
+                                           name="pump_id" 
+                                           min="1"
+                                           placeholder="e.g., 3"
+                                           value="{{ form_data.pump_id if form_data else '' }}"
+                                           required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="emp_id" class="form-label">
+                                        <i class="fas fa-user me-1"></i>
+                                        Employee ID
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="emp_id"
+                                           name="emp_id" 
+                                           min="1"
+                                           placeholder="e.g., 101"
+                                           value="{{ form_data.emp_id if form_data else '' }}"
+                                           required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg position-relative">
+                                    <i class="fas fa-shield-alt me-2"></i>
+                                    <span class="btn-text">Analyze Transaction</span>
+                                    <div class="btn-particles"></div>
+                                </button>
+                            </div>
+                        </form>
+                        
+                        {% if prediction %}
+                        <div class="alert alert-{{ prediction_class }} mt-4" role="alert">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    {% if prediction_class == 'danger' %}
+                                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                    {% elif prediction_class == 'success' %}
+                                        <i class="fas fa-check-circle fa-2x"></i>
+                                    {% else %}
+                                        <i class="fas fa-info-circle fa-2x"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="alert-heading mb-1">Detection Result</h5>
+                                    <strong>{{ prediction }}</strong>
+                                    {% if prediction_details %}
+                                    <div class="mt-2 small">
+                                        <strong>Analysis:</strong><br>
+                                        {{ prediction_details | replace('•', '<br>•') | safe }}
+                                    </div>
+                                    {% endif %}
+                                    {% if transaction_id %}
+                                    <br><small class="text-muted">Transaction ID: {{ transaction_id }} - Saved to database</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Powered by Machine Learning - Isolation Forest Algorithm
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
